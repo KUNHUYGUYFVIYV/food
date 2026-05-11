@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>食品化学题库</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        .controls {
+            padding: 30px;
+            background: white;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .filter-group {
+            margin-bottom: 20px;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1em;
+        }
+        
+        .btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .question-section {
+            display: none;
+        }
+        
+        .question-section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .question {
+            background: #f8f9fa;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s;
+        }
+        
+        .question:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .question-text {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .options {
+            list-style: none;
+            margin-left: 20px;
+        }
+        
+        .options li {
+            padding: 8px 0;
+            color: #555;
+        }
+        
+        .answer {
+            margin-top: 15px;
+            padding: 15px;
+            background: #d4edda;
+            border-radius: 5px;
+            border-left: 4px solid #28a745;
+            display: none;
+        }
+        
+        .answer.show {
+            display: block;
+            animation: slideDown 0.3s;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; max-height: 0; }
+            to { opacity: 1; max-height: 200px; }
+        }
+        
+        .toggle-answer {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        
+        .toggle-answer:hover {
+            background: #218838;
+            transform: scale(1.05);
+        }
+        
+        .chapter {
+            margin-bottom: 40px;
+        }
+        
+        .chapter-title {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transition: width 0.5s;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 食品化学题库</h1>
+            <p>基于《食品化学（第三版）》（王璋主编）</p>
+        </header>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-number">60</span>
+                <div class="stat-label">选择题</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">60</span>
+                <div class="stat-label">填空题</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">15</span>
+                <div class="stat-label">结构命名题</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">20</span>
+                <div class="stat-label">简答题</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="filter-group">
+                <label>选择题型：</label>
+                <div class="btn-group">
+                    <button class="btn active" onclick="showSection('all')">全部题目</button>
+                    <button class="btn" onclick="showSection('choice')">选择题 (30%)</button>
+                    <button class="btn" onclick="showSection('fill')">填空题 (20%)</button>
+                    <button class="btn" onclick="showSection('structure')">结构命名题 (10%)</button>
+                    <button class="btn" onclick="showSection('essay')">简答题 (40%)</button>
+                </div>
+            </div>
+            
+            <div class="filter-group">
+                <label>选择章节：</label>
+                <div class="btn-group">
+                    <button class="btn active" onclick="filterChapter('all')">全部章节</button>
+                    <button class="btn" onclick="filterChapter('ch1')">第一章 水</button>
+                    <button class="btn" onclick="filterChapter('ch2')">第二章 碳水化合物</button>
+                    <button class="btn" onclick="filterChapter('ch3')">第三章 脂类</button>
+                    <button class="btn" onclick="filterChapter('ch4')">第四章 蛋白质</button>
+                </div>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%;">学习进度: 0%</div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div id="all" class="question-section active">
+                <div class="chapter">
+                    <h2 class="chapter-title">📖 题库使用说明</h2>
+                    <div class="question">
+                        <div class="question-text">
+                            <h3>欢迎使用食品化学题库！</h3>
+                            <p>本题库包含以下几种题型：</p>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li><strong>选择题</strong>：共60题，占考试30%</li>
+                                <li><strong>填空题</strong>：共60题，占考试20%</li>
+                                <li><strong>结构命名题</strong>：共15题，占考试10%</li>
+                                <li><strong>简答题</strong>：共20题，占考试40%</li>
+                            </ul>
+                            <p style="margin-top: 15px;"><strong>使用建议：</strong></p>
+                            <ol style="margin-left: 20px; margin-top: 10px;">
+                                <li>按章节顺序学习，先理解概念</li>
+                                <li>点击"显示答案"按钮检查学习效果</li>
+                                <li>重点复习简答题（占40%）</li>
+                                <li>使用上方的筛选功能针对性练习</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chapter">
+                    <h2 class="chapter-title">✏️ 选择题示例</h2>
+                    <div class="question" data-chapter="ch1">
+                        <div class="question-text">
+                            <strong>题目 1:</strong> 水分子的空间构型是？
+                        </div>
+                        <ul class="options">
+                            <li>A. 直线型</li>
+                            <li>B. V型（角型）</li>
+                            <li>C. 平面三角形</li>
+                            <li>D. 四面体</li>
+                        </ul>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">显示答案</button>
+                        <div class="answer">
+                            <strong>答案：B</strong><br>
+                            水分子中氧原子采取sp³杂化，形成两个O-H键和两对孤对电子，空间构型为V型（角型），键角约为104.5°。
+                        </div>
+                    </div>
+                    
+                    <div class="question" data-chapter="ch1">
+                        <div class="question-text">
+                            <strong>题目 2:</strong> 水分活度（Aw）的定义是？
+                        </div>
+                        <ul class="options">
+                            <li>A. 食品中水的质量分数</li>
+                            <li>B. 食品中游离水的比例</li>
+                            <li>C. 食品的水蒸气分压与同温度下纯水的饱和蒸气压之比</li>
+                            <li>D. 食品的含水量与干物质之比</li>
+                        </ul>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">显示答案</button>
+                        <div class="answer">
+                            <strong>答案：C</strong><br>
+                            水分活度（Water Activity, Aw）是食品中水的蒸汽压P与同温度下纯水的饱和蒸汽压P₀之比，即 Aw = P/P₀。它反映了食品中水分的可利用性。
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chapter">
+                    <h2 class="chapter-title">📝 填空题示例</h2>
+                    <div class="question" data-chapter="ch1">
+                        <div class="question-text">
+                            <strong>题目 1:</strong> 水分子中O-H键的键角是 ______ 度。
+                        </div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">显示答案</button>
+                        <div class="answer">
+                            <strong>答案：104.5</strong><br>
+                            水分子中氧原子采取sp³杂化，由于两对孤对电子的排斥作用，O-H键的键角被压缩至104.5°，小于理想四面体的109.5°。
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chapter">
+                    <h2 class="chapter-title">🧪 结构命名题示例</h2>
+                    <div class="question">
+                        <div class="question-text">
+                            <strong>题目 1:</strong> 请写出下列脂肪酸的系统命名和结构式：<br>
+                            (1) 棕榈酸（软脂酸）
+                        </div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">显示答案</button>
+                        <div class="answer">
+                            <strong>答案：</strong><br>
+                            系统命名：十六烷酸<br>
+                            结构式：CH₃(CH₂)₁₄COOH<br>
+                            <br>
+                            <strong>解析：</strong>棕榈酸是含有16个碳原子的饱和脂肪酸，系统命名为十六烷酸。它是常见的饱和脂肪酸之一。
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chapter">
+                    <h2 class="chapter-title">📄 简答题示例</h2>
+                    <div class="question" data-chapter="ch1">
+                        <div class="question-text">
+                            <strong>题目 1:</strong> 简述食品中水的存在状态及其特点。
+                        </div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">显示答案</button>
+                        <div class="answer">
+                            <strong>答案：</strong><br>
+                            食品中的水主要以两种状态存在：<br><br>
+                            
+                            <strong>（1）结合水（束缚水）：</strong><br>
+                            • 与食品中的非水成分通过氢键等作用紧密结合<br>
+                            • 不易冻结（冰点可降至-40℃）<br>
+                            • 不能作为溶剂<br>
+                            • 不易蒸发<br>
+                            • 不能被微生物利用<br><br>
+                            
+                            <strong>（2）自由水（游离水）：</strong><br>
+                            • 与普通水性质相似<br>
+                            • 可作为溶剂<br>
+                            • 容易蒸发<br>
+                            • 0℃可以结冰<br>
+                            • 能被微生物利用<br><br>
+                            
+                            结合水又可分为：化合水、邻近水、多层水三种类型。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2024 食品化学题库 - 基于《食品化学（第三版）》（王璋主编）</p>
+            <p style="margin-top: 10px; opacity: 0.8;">本题库仅供学习交流使用</p>
+        </footer>
+    </div>
+    
+    <script>
+        function showSection(sectionId) {
+            // 隐藏所有section
+            const sections = document.querySelectorAll('.question-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // 显示选中的section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // 更新按钮状态
+            const buttons = document.querySelectorAll('.controls .btn-group:first-child .btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+        
+        function filterChapter(chapterId) {
+            const questions = document.querySelectorAll('.question');
+            
+            if (chapterId === 'all') {
+                questions.forEach(q => {
+                    q.style.display = 'block';
+                });
+            } else {
+                questions.forEach(q => {
+                    if (q.dataset.chapter === chapterId) {
+                        q.style.display = 'block';
+                    } else {
+                        q.style.display = 'none';
+                    }
+                });
+            }
+            
+            // 更新按钮状态
+            const buttons = document.querySelectorAll('.controls .btn-group:last-child .btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            updateProgress();
+        }
+        
+        function toggleAnswer(button) {
+            const answer = button.nextElementSibling;
+            answer.classList.toggle('show');
+            
+            if (answer.classList.contains('show')) {
+                button.textContent = '隐藏答案';
+            } else {
+                button.textContent = '显示答案';
+            }
+            
+            updateProgress();
+        }
+        
+        function updateProgress() {
+            const totalQuestions = document.querySelectorAll('.question:visible').length;
+            const answeredQuestions = document.querySelectorAll('.answer.show').length;
+            const progress = totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0;
+            
+            const progressFill = document.querySelector('.progress-fill');
+            progressFill.style.width = progress + '%';
+            progressFill.textContent = '学习进度: ' + progress + '%';
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgress();
+        });
+    </script>
+</body>
+</html>
